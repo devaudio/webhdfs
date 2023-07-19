@@ -432,18 +432,24 @@ const listStatusRsp = `
 `
 
 func mockServerFor_ListStatus() *httptest.Server {
-	handler := func(rsp http.ResponseWriter, req *http.Request) {
-		if req.Method != "GET" {
-			log.Fatalf("Expecting Request.Method GET, but got %v", req.Method)
-		}
-		q := req.URL.Query()
-		if q.Get("op") != OP_LISTSTATUS {
-			panic(`Server Missing expected URL parameter: op=` + OP_LISTSTATUS)
-		}
-		fmt.Fprintln(rsp, listStatusRsp)
-	}
-	return httptest.NewServer(http.HandlerFunc(handler))
+    handler := func(rsp http.ResponseWriter, req *http.Request) {
+        if req.Method != "GET" {
+            log.Fatalf("Expecting Request.Method GET, but got %v", req.Method)
+        }
+        q := req.URL.Query()
+        if q.Get("op") != OP_LISTSTATUS {
+            panic(`Server Missing expected URL parameter: op=` + OP_LISTSTATUS)
+        }
+        fmt.Fprint(rsp, listStatusRsp)
+    }
+
+    // Use the handler in a server
+    server := httptest.NewServer(http.HandlerFunc(handler))
+
+    return server
 }
+
+
 
 const fileStatusRsp = `
 {
@@ -464,18 +470,19 @@ const fileStatusRsp = `
 `
 
 func mockServerFor_FileStatus() *httptest.Server {
-	handler := func(rsp http.ResponseWriter, req *http.Request) {
-		if req.Method != "GET" {
-			log.Fatalf("Expecting Request.Method GET, but got %v", req.Method)
-		}
-		q := req.URL.Query()
-		if q.Get("op") != OP_GETFILESTATUS {
-			panic(`Server Missing expected URL parameter: op=` + OP_GETFILESTATUS)
-		}
-		fmt.Fprintln(rsp, fileStatusRsp)
-	}
-	return httptest.NewServer(http.HandlerFunc(handler))
+    handler := func(rsp http.ResponseWriter, req *http.Request) {
+        if req.Method != "GET" {
+            log.Fatalf("Expecting Request.Method GET, but got %v", req.Method)
+        }
+        q := req.URL.Query()
+        if q.Get("op") != OP_GETFILESTATUS {
+            panic(`Server Missing expected URL parameter: op=` + OP_GETFILESTATUS)
+        }
+        fmt.Fprint(rsp, fileStatusRsp)
+    }
+    return httptest.NewServer(http.HandlerFunc(handler))
 }
+
 
 const contentSummaryRsp = `
 {
@@ -492,15 +499,15 @@ const contentSummaryRsp = `
 `
 
 func mockServerFor_ContentSummary() *httptest.Server {
-	handler := func(rsp http.ResponseWriter, req *http.Request) {
+    handler := func(rsp http.ResponseWriter, req *http.Request) {
 
-		q := req.URL.Query()
-		if q.Get("op") != OP_GETCONTENTSUMMARY {
-			panic(`Server Missing expected URL parameter: op=` + OP_GETCONTENTSUMMARY)
-		}
-		fmt.Fprintln(rsp, contentSummaryRsp)
-	}
-	return httptest.NewServer(http.HandlerFunc(handler))
+        q := req.URL.Query()
+        if q.Get("op") != OP_GETCONTENTSUMMARY {
+            panic(`Server Missing expected URL parameter: op=` + OP_GETCONTENTSUMMARY)
+        }
+        fmt.Fprint(rsp, contentSummaryRsp)
+    }
+    return httptest.NewServer(http.HandlerFunc(handler))
 }
 
 const fileChecksumRsp = `
@@ -515,16 +522,17 @@ const fileChecksumRsp = `
 `
 
 func mockServerFor_FileChecksum() *httptest.Server {
-	handler := func(rsp http.ResponseWriter, req *http.Request) {
-		if req.Method != "GET" {
-			log.Fatalf("Expecting Request.Method GET, but got %v", req.Method)
-		}
+    handler := func(rsp http.ResponseWriter, req *http.Request) {
+        if req.Method != "GET" {
+            log.Fatalf("Expecting Request.Method GET, but got %v", req.Method)
+        }
 
-		q := req.URL.Query()
-		if q.Get("op") != OP_GETFILECHECKSUM {
-			panic(`Server Missing expected URL parameter: op=` + OP_GETFILECHECKSUM)
-		}
-		fmt.Fprintln(rsp, fileChecksumRsp)
-	}
-	return httptest.NewServer(http.HandlerFunc(handler))
+        q := req.URL.Query()
+        if q.Get("op") != OP_GETFILECHECKSUM {
+            panic(`Server Missing expected URL parameter: op=` + OP_GETFILECHECKSUM)
+        }
+        fmt.Fprint(rsp, fileChecksumRsp)
+    }
+    return httptest.NewServer(http.HandlerFunc(handler))
 }
+

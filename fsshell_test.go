@@ -207,17 +207,18 @@ func createTestFile(fileName string) (*os.File, error) {
 const fsShellOpenRsp = `Hello! I am ready for the world.`
 
 func mockServerFor_FsShellOpen() *httptest.Server {
-	handler := func(rsp http.ResponseWriter, req *http.Request) {
-		q := req.URL.Query()
-		if q.Get("op") == OP_GETFILESTATUS {
-			fmt.Fprintln(rsp, fileStatusRsp)
-		}
-		if q.Get("op") == OP_OPEN {
-			fmt.Fprintln(rsp, fsShellOpenRsp)
-		}
-	}
-	return httptest.NewServer(http.HandlerFunc(handler))
+    handler := func(rsp http.ResponseWriter, req *http.Request) {
+        q := req.URL.Query()
+        if q.Get("op") == OP_GETFILESTATUS {
+            fmt.Fprint(rsp, fileStatusRsp)
+        }
+        if q.Get("op") == OP_OPEN {
+            fmt.Fprint(rsp, fsShellOpenRsp)
+        }
+    }
+    return httptest.NewServer(http.HandlerFunc(handler))
 }
+
 
 func mockServerFor_FsShellChgrp() *httptest.Server {
 	handler := func(rsp http.ResponseWriter, req *http.Request) {

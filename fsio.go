@@ -75,9 +75,9 @@ func (fs *FileSystem) Create(
 		fmt.Errorf("FileSystem.Create(%s) - bad url: %s", loc, err.Error())
 		return false, err
 	}
+    defer rsp.Body.Close()  // Ensure the Body is always closed UP here, not below--> otherwise, memory leaks
 
 	if rsp.StatusCode != http.StatusCreated {
-		defer rsp.Body.Close()
 		_, err = responseToHdfsData(rsp)
 		if err != nil {
 			return false, err
@@ -182,9 +182,9 @@ func (fs *FileSystem) Append(data io.Reader, p Path, buffersize uint) (bool, err
 	if err != nil {
 		return false, err
 	}
+    defer rsp.Body.Close()  // Ensure the Body is always closed here, not below
 
 	if rsp.StatusCode != http.StatusOK {
-		defer rsp.Body.Close()
 		res, err := responseToHdfsData(rsp)
 		if err != nil {
 			return false, err

@@ -1,12 +1,9 @@
-[![Build Status](https://drone.io/github.com/gohadoop/webhdfs/status.png)](https://drone.io/github.com/gohadoop/webhdfs/latest)
-
 ## webhdfs 
 webhdfs is a Go bindings for Hadoop HDFS via its WebHDFS interface.  
 
-It provides typed access to remote HDFS resources via Go's JSON marshaling system.  It follows the WebHDFS JSON protocol outline in  http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/WebHDFS.html.  It has been tested with Apache Hadoop 2.x.x - series.
+forked from https://github.com/extrame/webhdfs, mostly to move a defered close() in the lib that causes a memory leak
 
-#### GoDoc Package Documentation
-GoDoc documentation - https://godoc.org/github.com/gohadoop/webhdfs
+It provides typed access to remote HDFS resources via Go's JSON marshaling system.  It follows the WebHDFS JSON protocol outline in  http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/WebHDFS.html.  It has been tested with Apache Hadoop 2.x.x - series.
 
 ### Usage
 ```
@@ -25,9 +22,6 @@ if err != nil {
 }
 fmt.Println (checksum)
 ```
-
-### Run HDFS Test
-To see the API used, see directory `test-hdfs`. Compile and use that code to test against a running  HDFS deployment.  See https://github.com/gohadoop/webhdfs/tree/master/test-hdfs.
 
 #### HDFS Setup
 * Enable `dfs.webhdfs.enabled` property in your hsdfs-site.xml 
@@ -58,7 +52,6 @@ Now you are ready to communicate with HDFS.
 
 #### Create File
 `FileSystem.Create()` creates and store a remote file on the HDFS server.
-See https://godoc.org/github.com/gohadoop/webhdfs#FileSystem.Create
 ```
 ok, err := fs.Create(
     bytes.NewBufferString("Hello webhdfs users!"),
@@ -72,7 +65,7 @@ ok, err := fs.Create(
 ```
 
 #### Open HDFS File
-Use the `FileSystem.Open()` to open and read a remote file from HDFS.  See https://godoc.org/github.com/gohadoop/webhdfs#FileSystem.Open
+Use the `FileSystem.Open()` to open and read a remote file from HDFS.  
 ```
 data, err := fs.Open(webhdfs.Path{Name:"/remote/file"}, 0, 512, 2048)
 ...
@@ -82,7 +75,7 @@ fmt.Println(string(rcvdData))
 ```
 
 #### Append to File
-To append to an existing HDFS file, use `FileSystem.Append()`.  See https://godoc.org/github.com/gohadoop/webhdfs#FileSystem.Append
+To append to an existing HDFS file, use `FileSystem.Append()`.  
 ```
 ok, err := fs.Append(
     bytes.NewBufferString("Hello webhdfs users!"),
@@ -90,19 +83,19 @@ ok, err := fs.Append(
 ```
 
 #### Rename File
-Use `FileSystem.Rename()` to rename HDFS resources. See https://godoc.org/github.com/gohadoop/webhdfs#FileSystem.Rename
+Use `FileSystem.Rename()` to rename HDFS resources. 
 ```
 ok, err := fs.Rename(webhdfs.Path{Name:"/old/name"}, Path{Name:"/new/name"})
 ```
 
 #### Delete HDFS Resources
-To delete an HDFS resource (file/directory), use `FileSystem.Delete()`.  See https://godoc.org/github.com/gohadoop/webhdfs#FileSystem.Delete
+To delete an HDFS resource (file/directory), use `FileSystem.Delete()`.  
 ```go
 ok, err := fs.Delete(webhdfs.Path{Name:"/remote/file/todelete"}, false)
 ```
 
 #### File Status
-You can get status about an existing HDFS resource using `FileSystem.GetFileStatus()`. See https://godoc.org/github.com/gohadoop/webhdfs#FileSystem.GetFileStatus
+You can get status about an existing HDFS resource using `FileSystem.GetFileStatus()`. 
 
 ```go
 fileStatus, err := fs.GetFileStatus(webhdfs.Path{Name:"/remote/file"})
@@ -136,36 +129,36 @@ To create an FsShell, you need to have an existing instance of FileSystem.
 shell := webhdfs.FsShell{FileSystem:fs}
 ```
 #### FsShell.Put()
-Use the put to upload a local file to an HDFS file system. See https://godoc.org/github.com/gohadoop/webhdfs#FsShell.PutOne
+Use the put to upload a local file to an HDFS file system. 
 ```go
 ok, err := shell.Put("local/file/name", "hdfs/file/path", true)
 ```
 #### FsShell.Get()
-Use the Get to retrieve remote HDFS file to local file system. See https://godoc.org/github.com/gohadoop/webhdfs#FsShell.Get
+Use the Get to retrieve remote HDFS file to local file system. 
 ```go
 ok, err := shell.Get("hdfs/file/path", "local/file/name")
 ```
 
 #### FsShell.AppendToFile()
-Append local files to remote HDFS file or directory. See https://godoc.org/github.com/gohadoop/webhdfs#FsShell.AppendToFile
+Append local files to remote HDFS file or directory. 
 ```go
 ok, err := shell.AppendToFile([]string{"local/file/1", "local/file/2"}, "remote/hdfs/path")
 ```
 
 #### FsShell.Chown()
-Change owner for remote file.  See https://godoc.org/github.com/gohadoop/webhdfs#FsShell.Chown.
+Change owner for remote file.  
 ```go
 ok, err := shell.Chown([]string{"/remote/hdfs/file"}, "owner2")
 ```
 
 #### FsShell.Chgrp()
-Change group of remote HDFS files.  See https://godoc.org/github.com/gohadoop/webhdfs#FsShell.Chgrp
+Change group of remote HDFS files.  
 ```go
 ok, err := shell.Chgrp([]string{"/remote/hdfs/file"}, "superduper")
 ```
 
 #### FsShell.Chmod()
-Change file mod of remote HDFS files.  See https://godoc.org/github.com/gohadoop/webhdfs#FsShell.Chmod
+Change file mod of remote HDFS files.  
 ```go
 ok, err := shell.Chmod([]string{"/remote/hdfs/file/"}, 0744)
 ```
